@@ -34,7 +34,9 @@ var _server = _interopRequireDefault(require("styled-jsx/server"));
 /* eslint-disable */
 var Fragment = _react.default.Fragment || function Fragment(_ref) {
   var children = _ref.children;
-  return _react.default.createElement("div", null, children);
+  return {
+    children: children
+  };
 };
 
 var Document =

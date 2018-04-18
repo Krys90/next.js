@@ -131,7 +131,7 @@ async function doRender (req, res, pathname, query, {
     ...docProps
   })
 
-  return '<!DOCTYPE html>' + renderToStaticMarkup(doc)
+  return renderToStaticMarkup(doc)
 }
 
 export async function renderScriptError (req, res, page, error) {

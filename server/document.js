@@ -5,7 +5,7 @@ import htmlescape from 'htmlescape'
 import flush from 'styled-jsx/server'
 
 const Fragment = React.Fragment || function Fragment ({ children }) {
-  return <div>{children}</div>
+  return {children}
 }
 
 export default class Document extends Component {

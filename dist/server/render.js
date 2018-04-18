@@ -333,7 +333,7 @@ function _doRender() {
               staticMarkup: staticMarkup,
               buildManifest: buildManifest
             }, docProps));
-            return _context3.abrupt("return", '<!DOCTYPE html>' + (0, _server.renderToStaticMarkup)(doc));
+            return _context3.abrupt("return", (0, _server.renderToStaticMarkup)(doc));
 
           case 38:
           case "end":
