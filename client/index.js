@@ -60,8 +60,11 @@ window.__NEXT_REGISTER_PAGE = pageLoader.registerPage.bind(pageLoader)
 window.__NEXT_REGISTER_CHUNK = pageLoader.registerChunk.bind(pageLoader)
 
 const headManager = new HeadManager()
-const appContainer = document.getElementById('__next')
-const errorContainer = document.getElementById('__next-error')
+
+let commonDomPrefix = pathname.replace('/', '__')
+
+const appContainer = document.getElementById('__next' + commonDomPrefix)
+const errorContainer = document.getElementById('__next-error' + commonDomPrefix)
 
 let lastAppProps
 export let router

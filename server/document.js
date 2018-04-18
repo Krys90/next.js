@@ -107,11 +107,15 @@ export class Main extends Component {
   }
 
   render () {
-    const { html, errorHtml } = this.context._documentProps
+    const { html, errorHtml, __NEXT_DATA__ } = this.context._documentProps
+    let { pathname } = __NEXT_DATA__;
+
+    let commonDomPrefix = pathname.replace('/', '__');
+    
     return (
       <Fragment>
-        <div id='__next' dangerouslySetInnerHTML={{ __html: html }} />
-        <div id='__next-error' dangerouslySetInnerHTML={{ __html: errorHtml }} />
+        <div id={`__next${commonDomPrefix}`} dangerouslySetInnerHTML={{ __html: html }} />
+        <div id={`__next-error${commonDomPrefix}`} dangerouslySetInnerHTML={{ __html: errorHtml }} />
       </Fragment>
     )
   }
