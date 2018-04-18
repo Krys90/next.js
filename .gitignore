@@ -1,6 +1,8 @@
 # build output
-dist
-.next
+#dist
+#.next
+
+.history
 
 # dependencies
 node_modules
