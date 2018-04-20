@@ -59,6 +59,9 @@ var presetItem = (0, _core.createConfigItem)(require('./babel/preset'), {
 var hotLoaderItem = (0, _core.createConfigItem)(require('react-hot-loader/babel'), {
   type: 'plugin'
 });
+var reactJsxSourceItem = (0, _core.createConfigItem)(require('@babel/plugin-transform-react-jsx-source'), {
+  type: 'plugin'
+});
 
 var nextDir = _path.default.join(__dirname, '..', '..', '..');
 
@@ -77,7 +80,7 @@ function babelConfig(dir, _ref) {
   var mainBabelOptions = {
     cacheDirectory: true,
     presets: [],
-    plugins: [dev && !isServer && hotLoaderItem].filter(Boolean)
+    plugins: [dev && !isServer && hotLoaderItem, dev && reactJsxSourceItem].filter(Boolean)
   };
 
   var filename = _path.default.join(dir, 'filename.js');
@@ -185,7 +188,7 @@ function _getBaseWebpackConfig() {
               'main.js': [dev && !isServer && _path.default.join(__dirname, '..', '..', 'client', 'webpack-hot-middleware-client'), dev && !isServer && _path.default.join(__dirname, '..', '..', 'client', 'on-demand-entries-client'), require.resolve("../../client/next".concat(dev ? '-dev' : ''))].filter(Boolean)
             } : {};
             webpackConfig = {
-              devtool: dev ? 'source-map' : false,
+              devtool: dev ? 'cheap-module-source-map' : false,
               name: isServer ? 'server' : 'client',
               cache: true,
               target: isServer ? 'node' : 'web',
@@ -221,14 +224,7 @@ function _getBaseWebpackConfig() {
                 libraryTarget: 'commonjs2',
                 // This saves chunks with the name given via require.ensure()
                 chunkFilename: '[name]-[chunkhash].js',
-                strictModuleExceptionHandling: true,
-                devtoolModuleFilenameTemplate: function devtoolModuleFilenameTemplate(info) {
-                  if (dev) {
-                    return info.absoluteResourcePath;
-                  }
-
-                  return "".concat(info.absoluteResourcePath.replace(dir, '.').replace(nextDir, './node_modules/next'));
-                }
+                strictModuleExceptionHandling: true
               },
               performance: {
                 hints: false

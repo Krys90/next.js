@@ -28,8 +28,6 @@ var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
@@ -46,47 +44,36 @@ function (_Component) {
   (0, _inherits2.default)(App, _Component);
 
   function App() {
-    var _ref;
-
-    var _temp, _this;
-
     (0, _classCallCheck2.default)(this, App);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return (0, _possibleConstructorReturn2.default)(_this, (_temp = _this = (0, _possibleConstructorReturn2.default)(this, (_ref = App.__proto__ || (0, _getPrototypeOf.default)(App)).call.apply(_ref, [this].concat(args))), Object.defineProperty((0, _assertThisInitialized2.default)(_this), "state", {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: {
-        hasError: null
-      }
-    }), _temp));
+    return (0, _possibleConstructorReturn2.default)(this, (App.__proto__ || (0, _getPrototypeOf.default)(App)).apply(this, arguments));
   }
 
   (0, _createClass2.default)(App, [{
     key: "getChildContext",
     value: function getChildContext() {
       var headManager = this.props.headManager;
-      var hasError = this.state.hasError;
       return {
         headManager: headManager,
         router: (0, _router.makePublicRouterInstance)(this.props.router),
-        _containerProps: (0, _objectSpread2.default)({}, this.props, {
-          hasError: hasError
-        })
+        _containerProps: (0, _objectSpread2.default)({}, this.props)
       };
     }
   }, {
     key: "componentDidCatch",
-    value: function componentDidCatch(error, info) {
-      error.stack = "".concat(error.stack, "\n\n").concat(info.componentStack);
-      window.next.renderError(error);
-      this.setState({
-        hasError: true
-      });
+    value: function componentDidCatch(err, info) {
+      // To provide clearer stacktraces in error-debug.js in development
+      // To provide clearer stacktraces in app.js in production
+      err.info = info;
+
+      if (process.env.NODE_ENV === 'production') {
+        // In production we render _error.js
+        window.next.renderError({
+          err: err
+        });
+      } else {
+        // In development we throw the error up to AppContainer from react-hot-loader
+        throw err;
+      }
     }
   }, {
     key: "render",
@@ -105,13 +92,13 @@ function (_Component) {
     value: function () {
       var _getInitialProps = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee(_ref2) {
+      _regenerator.default.mark(function _callee(_ref) {
         var Component, router, ctx, pageProps;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                Component = _ref2.Component, router = _ref2.router, ctx = _ref2.ctx;
+                Component = _ref.Component, router = _ref.router, ctx = _ref.ctx;
                 _context.next = 3;
                 return (0, _utils.loadGetInitialProps)(Component, ctx);
 
@@ -197,29 +184,8 @@ function (_Component2) {
   }, {
     key: "render",
     value: function render() {
-      var hasError = this.context._containerProps.hasError;
-
-      if (hasError) {
-        return null;
-      }
-
       var children = this.props.children;
-
-      if (process.env.NODE_ENV === 'production') {
-        return _react.default.createElement(_react.default.Fragment, null, children);
-      } else {
-        var ErrorDebug = require('./error-debug').default;
-
-        var _require = require('react-hot-loader'),
-            AppContainer = _require.AppContainer; // includes AppContainer which bypasses shouldComponentUpdate method
-        // https://github.com/gaearon/react-hot-loader/issues/442
-
-
-        return _react.default.createElement(AppContainer, {
-          warnings: false,
-          errorReporter: ErrorDebug
-        }, children);
-      }
+      return _react.default.createElement(_react.default.Fragment, null, children);
     }
   }]);
   return Container;

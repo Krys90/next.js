@@ -58,6 +58,8 @@ var _dynamic = require("../lib/dynamic");
 
 var _constants = require("../lib/constants");
 
+var _sourceMapSupport = require("./lib/source-map-support");
+
 var logger = console;
 
 function render(_x, _x2, _x3, _x4, _x5) {
@@ -180,29 +182,32 @@ function _doRender() {
           case 0:
             _ref4 = _args3.length > 4 && _args3[4] !== undefined ? _args3[4] : {}, err = _ref4.err, page = _ref4.page, buildId = _ref4.buildId, hotReloader = _ref4.hotReloader, assetPrefix = _ref4.assetPrefix, runtimeConfig = _ref4.runtimeConfig, availableChunks = _ref4.availableChunks, dist = _ref4.dist, _ref4$dir = _ref4.dir, dir = _ref4$dir === void 0 ? process.cwd() : _ref4$dir, _ref4$dev = _ref4.dev, dev = _ref4$dev === void 0 ? false : _ref4$dev, _ref4$staticMarkup = _ref4.staticMarkup, staticMarkup = _ref4$staticMarkup === void 0 ? false : _ref4$staticMarkup, _ref4$nextExport = _ref4.nextExport, nextExport = _ref4$nextExport === void 0 ? false : _ref4$nextExport;
             page = page || pathname;
+            _context3.next = 4;
+            return (0, _sourceMapSupport.applySourcemaps)(err);
 
+          case 4:
             if (!hotReloader) {
-              _context3.next = 5;
+              _context3.next = 7;
               break;
             }
 
-            _context3.next = 5;
+            _context3.next = 7;
             return ensurePage(page, {
               dir: dir,
               hotReloader: hotReloader
             });
 
-          case 5:
+          case 7:
             documentPath = (0, _path.join)(dir, dist, 'dist', 'bundles', 'pages', '_document');
             appPath = (0, _path.join)(dir, dist, 'dist', 'bundles', 'pages', '_app');
             buildManifest = require((0, _path.join)(dir, dist, _constants.BUILD_MANIFEST));
-            _context3.next = 10;
+            _context3.next = 12;
             return _promise.default.all([(0, _require.default)(page, {
               dir: dir,
               dist: dist
             }), require(documentPath), require(appPath)]);
 
-          case 10:
+          case 12:
             _ref5 = _context3.sent;
             _ref6 = (0, _slicedToArray2.default)(_ref5, 3);
             Component = _ref6[0];
@@ -211,13 +216,13 @@ function _doRender() {
             Component = Component.default || Component;
 
             if (!(typeof Component !== 'function')) {
-              _context3.next = 18;
+              _context3.next = 20;
               break;
             }
 
             throw new Error("The default export is not a React Component in page: \"".concat(pathname, "\""));
 
-          case 18:
+          case 20:
             App = App.default || App;
             Document = Document.default || Document;
             asPath = req.url;
@@ -230,24 +235,24 @@ function _doRender() {
               asPath: asPath
             };
             router = new _router.Router(pathname, query, asPath);
-            _context3.next = 25;
+            _context3.next = 27;
             return (0, _utils.loadGetInitialProps)(App, {
               Component: Component,
               router: router,
               ctx: ctx
             });
 
-          case 25:
+          case 27:
             props = _context3.sent;
 
             if (!(0, _utils.isResSent)(res)) {
-              _context3.next = 28;
+              _context3.next = 30;
               break;
             }
 
             return _context3.abrupt("return");
 
-          case 28:
+          case 30:
             renderPage = function renderPage() {
               var enhancer = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (Page) {
                 return Page;
@@ -267,7 +272,7 @@ function _doRender() {
                     error: err
                   }));
                 } else if (err) {
-                  errorHtml = render(app);
+                  html = render(app);
                 } else {
                   html = render(app);
                 }
@@ -290,30 +295,30 @@ function _doRender() {
               };
             };
 
-            _context3.next = 31;
+            _context3.next = 33;
             return (0, _utils.loadGetInitialProps)(Document, (0, _objectSpread2.default)({}, ctx, {
               renderPage: renderPage
             }));
 
-          case 31:
+          case 33:
             docProps = _context3.sent;
 
             if (!(0, _utils.isResSent)(res)) {
-              _context3.next = 34;
+              _context3.next = 36;
               break;
             }
 
             return _context3.abrupt("return");
 
-          case 34:
+          case 36:
             if (!(!Document.prototype || !Document.prototype.isReactComponent)) {
-              _context3.next = 36;
+              _context3.next = 38;
               break;
             }
 
             throw new Error('_document.js is not exporting a React element');
 
-          case 36:
+          case 38:
             doc = (0, _react.createElement)(Document, (0, _objectSpread2.default)({
               __NEXT_DATA__: {
                 props: props,
@@ -335,7 +340,7 @@ function _doRender() {
             }, docProps));
             return _context3.abrupt("return", (0, _server.renderToStaticMarkup)(doc));
 
-          case 38:
+          case 40:
           case "end":
             return _context3.stop();
         }

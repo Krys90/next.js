@@ -60,8 +60,7 @@ var envConfig = _interopRequireWildcard(require("../lib/runtime-config"));
 var _utils2 = require("../lib/utils");
 
 /* eslint-disable import/first, no-return-await */
-require('@zeit/source-map-support').install();
-
+// We need to go up one more level since we are in the `dist` directory
 var access = (0, _promisify.default)(_fs.default.access);
 var blockedPages = {
   '/_document': true,
@@ -881,7 +880,8 @@ function () {
       var _renderToHTML2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee17(req, res, pathname, query) {
-        var compilationErr, out;
+        var compilationErr, out, _require, applySourcemaps;
+
         return _regenerator.default.wrap(function _callee17$(_context17) {
           while (1) {
             switch (_context17.prev = _context17.next) {
@@ -927,11 +927,16 @@ function () {
                 return _context17.abrupt("return", this.renderErrorToHTML(null, req, res, pathname, query));
 
               case 21:
+                _require = require('./lib/source-map-support'), applySourcemaps = _require.applySourcemaps;
+                _context17.next = 24;
+                return applySourcemaps(_context17.t0);
+
+              case 24:
                 if (!this.quiet) console.error(_context17.t0);
                 res.statusCode = 500;
                 return _context17.abrupt("return", this.renderErrorToHTML(_context17.t0, req, res, pathname, query));
 
-              case 24:
+              case 27:
               case "end":
                 return _context17.stop();
             }

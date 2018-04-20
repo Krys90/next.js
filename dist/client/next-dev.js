@@ -8,17 +8,21 @@ var _stripAnsi = _interopRequireDefault(require("strip-ansi"));
 
 var next = _interopRequireWildcard(require("./"));
 
-var _errorDebug = _interopRequireDefault(require("../lib/error-debug"));
+var _errorDebug = require("../lib/error-debug");
 
 var _onDemandEntriesClient = _interopRequireDefault(require("./on-demand-entries-client"));
 
 var _webpackHotMiddlewareClient = _interopRequireDefault(require("./webpack-hot-middleware-client"));
 
-require('@zeit/source-map-support/browser-source-map-support');
+var _reactHotLoader = require("react-hot-loader");
+
+var _sourceMapSupport = require("./source-map-support");
 
 window.next = next;
 (0, next.default)({
-  ErrorDebugComponent: _errorDebug.default,
+  HotAppContainer: _reactHotLoader.AppContainer,
+  ErrorDebugComponent: _errorDebug.ClientDebug,
+  applySourcemaps: _sourceMapSupport.applySourcemaps,
   stripAnsi: _stripAnsi.default
 }).then(function (emitter) {
   (0, _onDemandEntriesClient.default)();

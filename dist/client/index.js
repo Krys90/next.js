@@ -21,7 +21,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _promise = _interopRequireDefault(require("@babel/runtime/core-js/promise"));
 
-var _react = require("react");
+var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
@@ -100,12 +100,17 @@ var router;
 exports.router = router;
 var ErrorComponent;
 exports.ErrorComponent = ErrorComponent;
+var HotAppContainer;
 var ErrorDebugComponent;
 var Component;
 var App;
 
 var stripAnsi = function stripAnsi(s) {
   return s;
+};
+
+var applySourcemaps = function applySourcemaps(e) {
+  return e;
 };
 
 var emitter = new _EventEmitter.default();
@@ -117,14 +122,17 @@ var _default =
 /*#__PURE__*/
 _regenerator.default.mark(function _callee() {
   var _ref4,
+      passedHotAppContainer,
       passedDebugComponent,
       passedStripAnsi,
+      passedApplySourcemaps,
       _iteratorNormalCompletion,
       _didIteratorError,
       _iteratorError,
       _iterator,
       _step,
       _chunkName,
+      initialErr,
       hash,
       _args = arguments;
 
@@ -132,7 +140,7 @@ _regenerator.default.mark(function _callee() {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _ref4 = _args.length > 0 && _args[0] !== undefined ? _args[0] : {}, passedDebugComponent = _ref4.ErrorDebugComponent, passedStripAnsi = _ref4.stripAnsi;
+          _ref4 = _args.length > 0 && _args[0] !== undefined ? _args[0] : {}, passedHotAppContainer = _ref4.HotAppContainer, passedDebugComponent = _ref4.ErrorDebugComponent, passedStripAnsi = _ref4.stripAnsi, passedApplySourcemaps = _ref4.applySourcemaps;
           // Wait for all the dynamic chunks to get loaded
           _iteratorNormalCompletion = true;
           _didIteratorError = false;
@@ -191,49 +199,52 @@ _regenerator.default.mark(function _callee() {
 
         case 27:
           stripAnsi = passedStripAnsi || stripAnsi;
+          applySourcemaps = passedApplySourcemaps || applySourcemaps;
+          HotAppContainer = passedHotAppContainer;
           ErrorDebugComponent = passedDebugComponent;
-          _context.next = 31;
+          _context.next = 33;
           return pageLoader.loadPage('/_error');
 
-        case 31:
+        case 33:
           exports.ErrorComponent = ErrorComponent = _context.sent;
-          _context.next = 34;
+          _context.next = 36;
           return pageLoader.loadPage('/_app');
 
-        case 34:
+        case 36:
           App = _context.sent;
-          _context.prev = 35;
-          _context.next = 38;
+          initialErr = err;
+          _context.prev = 38;
+          _context.next = 41;
           return pageLoader.loadPage(page);
 
-        case 38:
+        case 41:
           Component = _context.sent;
 
           if (!(typeof Component !== 'function')) {
-            _context.next = 41;
+            _context.next = 44;
             break;
           }
 
           throw new Error("The default export is not a React Component in page: \"".concat(pathname, "\""));
 
-        case 41:
-          _context.next = 47;
+        case 44:
+          _context.next = 49;
           break;
 
-        case 43:
-          _context.prev = 43;
-          _context.t1 = _context["catch"](35);
-          console.error(stripAnsi("".concat(_context.t1.message, "\n").concat(_context.t1.stack)));
-          Component = ErrorComponent;
+        case 46:
+          _context.prev = 46;
+          _context.t1 = _context["catch"](38);
+          // This catches errors like throwing in the top level of a module
+          initialErr = _context.t1;
 
-        case 47:
+        case 49:
           exports.router = router = (0, _router2.createRouter)(pathname, query, asPath, {
             initialProps: props,
             pageLoader: pageLoader,
             App: App,
             Component: Component,
             ErrorComponent: ErrorComponent,
-            err: err
+            err: initialErr
           });
           router.subscribe(function (_ref5) {
             var Component = _ref5.Component,
@@ -253,17 +264,17 @@ _regenerator.default.mark(function _callee() {
             Component: Component,
             props: props,
             hash: hash,
-            err: err,
+            err: initialErr,
             emitter: emitter
           });
           return _context.abrupt("return", emitter);
 
-        case 52:
+        case 54:
         case "end":
           return _context.stop();
       }
     }
-  }, _callee, this, [[4, 15, 19, 27], [20,, 22, 26], [35, 43]]);
+  }, _callee, this, [[4, 15, 19, 27], [20,, 22, 26], [38, 46]]);
 }));
 
 exports.default = _default;
@@ -289,7 +300,7 @@ function _render() {
             }
 
             _context2.next = 3;
-            return renderError(props.err);
+            return renderError(props);
 
           case 3:
             return _context2.abrupt("return");
@@ -316,7 +327,9 @@ function _render() {
 
           case 13:
             _context2.next = 15;
-            return renderError(_context2.t0);
+            return renderError((0, _objectSpread2.default)({}, props, {
+              err: _context2.t0
+            }));
 
           case 15:
           case "end":
@@ -335,53 +348,50 @@ function renderError(_x2) {
 function _renderError() {
   _renderError = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
-  _regenerator.default.mark(function _callee3(error) {
-    var prod, errorMessage, initProps, _props;
-
+  _regenerator.default.mark(function _callee3(props) {
+    var err, str;
     return _regenerator.default.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            prod = process.env.NODE_ENV === 'production'; // We need to unmount the current app component because it's
-            // in the inconsistant state.
-            // Otherwise, we need to face issues when the issue is fixed and
-            // it's get notified via HMR
+            err = props.err; // In development we apply sourcemaps to the error
 
-            _reactDom.default.unmountComponentAtNode(appContainer);
-
-            errorMessage = "".concat(error.message, "\n").concat(error.stack);
-            console.error(stripAnsi(errorMessage));
-
-            if (!prod) {
-              _context3.next = 12;
+            if (!(process.env.NODE_ENV !== 'production')) {
+              _context3.next = 4;
               break;
             }
 
-            initProps = {
-              Component: ErrorComponent,
-              router: router,
-              ctx: {
-                err: error,
-                pathname: pathname,
-                query: query,
-                asPath: asPath
-              }
-            };
-            _context3.next = 8;
-            return (0, _utils.loadGetInitialProps)(ErrorComponent, initProps);
+            _context3.next = 4;
+            return applySourcemaps(err);
 
-          case 8:
-            _props = _context3.sent;
-            renderReactElement((0, _react.createElement)(ErrorComponent, _props), errorContainer);
-            _context3.next = 13;
-            break;
+          case 4:
+            str = stripAnsi("".concat(err.message, "\n").concat(err.stack).concat(err.info ? "\n\n".concat(err.info.componentStack) : ''));
+            console.error(str);
+
+            if (!(process.env.NODE_ENV !== 'production')) {
+              _context3.next = 10;
+              break;
+            }
+
+            // We need to unmount the current app component because it's
+            // in the inconsistant state.
+            // Otherwise, we need to face issues when the issue is fixed and
+            // it's get notified via HMR
+            _reactDom.default.unmountComponentAtNode(appContainer);
+
+            renderReactElement(_react.default.createElement(ErrorDebugComponent, {
+              error: err
+            }), errorContainer);
+            return _context3.abrupt("return");
+
+          case 10:
+            _context3.next = 12;
+            return doRender((0, _objectSpread2.default)({}, props, {
+              err: err,
+              Component: ErrorComponent
+            }));
 
           case 12:
-            renderReactElement((0, _react.createElement)(ErrorDebugComponent, {
-              error: error
-            }), errorContainer);
-
-          case 13:
           case "end":
             return _context3.stop();
         }
@@ -446,9 +456,18 @@ function _doRender() {
               appProps: appProps
             }); // We need to clear any existing runtime error messages
 
-            _reactDom.default.unmountComponentAtNode(errorContainer);
+            _reactDom.default.unmountComponentAtNode(errorContainer); // In development we render react-hot-loader's wrapper component
 
-            renderReactElement((0, _react.createElement)(App, appProps), appContainer);
+
+            if (HotAppContainer) {
+              renderReactElement(_react.default.createElement(HotAppContainer, {
+                errorReporter: ErrorDebugComponent,
+                warnings: false
+              }, _react.default.createElement(App, appProps)), appContainer);
+            } else {
+              renderReactElement(_react.default.createElement(App, appProps), appContainer);
+            }
+
             emitterProp.emit('after-reactdom-render', {
               Component: Component,
               ErrorComponent: ErrorComponent,

@@ -2,8 +2,6 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -32,12 +30,6 @@ function styledJsxOptions(opts) {
   return opts;
 }
 
-var envPlugins = {
-  'development': [require('@babel/plugin-transform-react-jsx-source')],
-  'production': [require('babel-plugin-transform-react-remove-prop-types')]
-};
-var plugins = envPlugins[process.env.NODE_ENV] || envPlugins['development'];
-
 module.exports = function (context) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
@@ -48,6 +40,6 @@ module.exports = function (context) {
       helpers: false,
       polyfill: false,
       regenerator: true
-    }], [require('styled-jsx/babel'), styledJsxOptions(opts['styled-jsx'])]].concat((0, _toConsumableArray2.default)(plugins))
+    }], [require('styled-jsx/babel'), styledJsxOptions(opts['styled-jsx'])], process.env.NODE_ENV === 'production' && require('babel-plugin-transform-react-remove-prop-types')].filter(Boolean)
   };
 };
