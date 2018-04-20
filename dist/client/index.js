@@ -72,15 +72,14 @@ envConfig.setConfig({
   publicRuntimeConfig: runtimeConfig
 });
 var asPath = (0, _utils.getURL)();
+var commonDomPrefix = pathname.replace('/', '__');
 var pageLoader = new _pageLoader.default(buildId, assetPrefix);
-
-window.__NEXT_LOADED_PAGES__.forEach(function (_ref) {
+window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__'].forEach(function (_ref) {
   var route = _ref.route,
       fn = _ref.fn;
   pageLoader.registerPage(route, fn);
 });
-
-delete window.__NEXT_LOADED_PAGES__;
+delete window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__'];
 
 window.__NEXT_LOADED_CHUNKS__.forEach(function (_ref2) {
   var chunkName = _ref2.chunkName,
@@ -92,7 +91,6 @@ delete window.__NEXT_LOADED_CHUNKS__;
 window.__NEXT_REGISTER_PAGE = pageLoader.registerPage.bind(pageLoader);
 window.__NEXT_REGISTER_CHUNK = pageLoader.registerChunk.bind(pageLoader);
 var headManager = new _headManager.default();
-var commonDomPrefix = pathname.replace('/', '__');
 var appContainer = document.getElementById('__next' + commonDomPrefix);
 var errorContainer = document.getElementById('__next-error' + commonDomPrefix);
 var lastAppProps;

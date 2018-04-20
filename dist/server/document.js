@@ -311,11 +311,12 @@ function (_Component4) {
           buildId = __NEXT_DATA__.buildId,
           assetPrefix = __NEXT_DATA__.assetPrefix;
       var pagePathname = getPagePathname(pathname);
+      var commonDomPrefix = pathname.replace('/', '__');
       __NEXT_DATA__.chunks = chunks.names;
       return _react.default.createElement(Fragment, null, staticMarkup ? null : _react.default.createElement("script", {
         nonce: this.props.nonce,
         dangerouslySetInnerHTML: {
-          __html: "\n          __NEXT_DATA__ = ".concat((0, _htmlescape.default)(__NEXT_DATA__), "\n          module={}\n          __NEXT_LOADED_PAGES__ = []\n          __NEXT_LOADED_CHUNKS__ = []\n\n          __NEXT_REGISTER_PAGE = function (route, fn) {\n            __NEXT_LOADED_PAGES__.push({ route: route, fn: fn })\n          }\n\n          __NEXT_REGISTER_CHUNK = function (chunkName, fn) {\n            __NEXT_LOADED_CHUNKS__.push({ chunkName: chunkName, fn: fn })\n          }\n\n          ").concat(page === '_error' && "\n          __NEXT_REGISTER_PAGE(".concat((0, _htmlescape.default)(pathname), ", function() {\n            var error = new Error('Page does not exist: ").concat((0, _htmlescape.default)(pathname), "')\n            error.statusCode = 404\n\n            return { error: error }\n          })\n          "), "\n        ")
+          __html: "\n          __NEXT_DATA__ = ".concat((0, _htmlescape.default)(__NEXT_DATA__), "\n          module={}\n          __NEXT_LOADED_PAGES").concat(commonDomPrefix, "__ = []\n          __NEXT_LOADED_CHUNKS__ = []\n\n          __NEXT_REGISTER_PAGE = function (route, fn) {\n            __NEXT_LOADED_PAGES").concat(commonDomPrefix, "__.push({ route: route, fn: fn })\n          }\n\n          __NEXT_REGISTER_CHUNK = function (chunkName, fn) {\n            __NEXT_LOADED_CHUNKS__.push({ chunkName: chunkName, fn: fn })\n          }\n\n          ").concat(page === '_error' && "\n          __NEXT_REGISTER_PAGE(".concat((0, _htmlescape.default)(pathname), ", function() {\n            var error = new Error('Page does not exist: ").concat((0, _htmlescape.default)(pathname), "')\n            error.statusCode = 404\n\n            return { error: error }\n          })\n          "), "\n        ")
         }
       }), page !== '/_error' && _react.default.createElement("script", {
         async: true,
