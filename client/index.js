@@ -47,10 +47,10 @@ const asPath = getURL()
 let commonDomPrefix = pathname.replace('/', '__')
 
 const pageLoader = new PageLoader(buildId, assetPrefix)
-window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__'].forEach(({ route, fn }) => {
+window[`__NEXT_LOADED_PAGES${commonDomPrefix}__`].forEach(({ route, fn }) => {
   pageLoader.registerPage(route, fn)
 })
-delete window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__']
+delete window[`__NEXT_LOADED_PAGES${commonDomPrefix}__`];
 
 window.__NEXT_LOADED_CHUNKS__.forEach(({ chunkName, fn }) => {
   pageLoader.registerChunk(chunkName, fn)
