@@ -44,12 +44,13 @@ envConfig.setConfig({
 })
 
 const asPath = getURL()
+let commonDomPrefix = pathname.replace('/', '__')
 
 const pageLoader = new PageLoader(buildId, assetPrefix)
-window.__NEXT_LOADED_PAGES__.forEach(({ route, fn }) => {
+window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__'].forEach(({ route, fn }) => {
   pageLoader.registerPage(route, fn)
 })
-delete window.__NEXT_LOADED_PAGES__
+delete window['__NEXT_LOADED_PAGES' + commonDomPrefix + '__']
 
 window.__NEXT_LOADED_CHUNKS__.forEach(({ chunkName, fn }) => {
   pageLoader.registerChunk(chunkName, fn)
@@ -60,8 +61,6 @@ window.__NEXT_REGISTER_PAGE = pageLoader.registerPage.bind(pageLoader)
 window.__NEXT_REGISTER_CHUNK = pageLoader.registerChunk.bind(pageLoader)
 
 const headManager = new HeadManager()
-
-let commonDomPrefix = pathname.replace('/', '__')
 
 const appContainer = document.getElementById('__next' + commonDomPrefix)
 const errorContainer = document.getElementById('__next-error' + commonDomPrefix)

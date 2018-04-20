@@ -179,6 +179,7 @@ export class NextScript extends Component {
     const { staticMarkup, __NEXT_DATA__, chunks } = this.context._documentProps
     const { page, pathname, buildId, assetPrefix } = __NEXT_DATA__
     const pagePathname = getPagePathname(pathname)
+    const commonDomPrefix = pathname.replace('/', '__')
 
     __NEXT_DATA__.chunks = chunks.names
 
@@ -187,11 +188,11 @@ export class NextScript extends Component {
         __html: `
           __NEXT_DATA__ = ${htmlescape(__NEXT_DATA__)}
           module={}
-          __NEXT_LOADED_PAGES__ = []
+          __NEXT_LOADED_PAGES${commonDomPrefix}__ = []
           __NEXT_LOADED_CHUNKS__ = []
 
           __NEXT_REGISTER_PAGE = function (route, fn) {
-            __NEXT_LOADED_PAGES__.push({ route: route, fn: fn })
+            __NEXT_LOADED_PAGES${commonDomPrefix}__.push({ route: route, fn: fn })
           }
 
           __NEXT_REGISTER_CHUNK = function (chunkName, fn) {
