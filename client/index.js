@@ -45,12 +45,13 @@ envConfig.setConfig({
 
 const asPath = getURL()
 let commonDomPrefix = pathname.replace('/', '__')
+let loadedpages = `__NEXT_LOADED_PAGES${commonDomPrefix}__`;
 
 const pageLoader = new PageLoader(buildId, assetPrefix)
-window[`__NEXT_LOADED_PAGES${commonDomPrefix}__`].forEach(({ route, fn }) => {
+window[loadedpages].forEach(({ route, fn }) => {
   pageLoader.registerPage(route, fn)
 })
-delete window[`__NEXT_LOADED_PAGES${commonDomPrefix}__`];
+delete window[loadedpages];
 
 window.__NEXT_LOADED_CHUNKS__.forEach(({ chunkName, fn }) => {
   pageLoader.registerChunk(chunkName, fn)
